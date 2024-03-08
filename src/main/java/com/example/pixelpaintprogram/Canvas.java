@@ -1,10 +1,15 @@
 package com.example.pixelpaintprogram;
 
+import javafx.scene.Scene;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-
+import javax.imageio.ImageIO;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+
 
 public class Canvas {
 
@@ -13,19 +18,25 @@ public class Canvas {
     public static int height = 0;
 
     /** The canvas map of pixels*/
-    private static Pixel[][] canvasMap;
+    public static Pixel[][] canvasMap;
 
     /** The history of all changes made to the canvas map stored as a list of arrays of color*/
-    private ArrayList<Color[][]> canvasHistory;
+    private static ArrayList<Color[][]> canvasHistory;
 
-    private int currentHistoryIndex = 0;
+    /** Keeps track of the current history index when going back and forth between changes made in history*/
+    private static int currentHistoryIndex = 0;
 
+    /** Container for all the pixels*/
     private Pane pane = new Pane();
+
+    /** Array for keeping track of changed pixels for the paint bucket tool*/
+    public static boolean[][] changedPixels = new boolean[height][width];
 
     /**
      * Constructor
      * @param width the numbers of pixels for the width of the board
-     * @param height the number of pixels for the height of the board*/
+     * @param height the number of pixels for the height of the
+     * */
     public Canvas(int width, int height){
 
         Canvas.width = width;
@@ -37,6 +48,7 @@ public class Canvas {
 
         initCanvas();
         addToGridPane();
+        addToHistory();
     }
 
     /**
@@ -66,9 +78,15 @@ public class Canvas {
     }
 
     /**
-     * Adds the current canvas colors to the history list
+     * Adds the current canvas colors to the history list and if current history isn't at the front
+     * then truncate all history to the right of current history index
      * */
-    public void addToHistory(){
+    public static void addToHistory(){
+
+        for(int i = currentHistoryIndex+1; i < canvasHistory.size(); i++) {
+            canvasHistory.remove(i);
+            i--;
+        }
 
         Color[][] copy = new Color[height][width];
 
@@ -81,11 +99,13 @@ public class Canvas {
 
         canvasHistory.add(copy);
 
+        currentHistoryIndex = canvasHistory.size() - 1;
     }
 
     /**
-     * Loads history based on index onto canvas map*/
-    public void loadHistory(int index){
+     * Loads history based on index onto canvas map
+     * */
+    public static void loadHistory(int index){
 
         currentHistoryIndex = index;
 
@@ -132,13 +152,33 @@ public class Canvas {
         return pane;
     }
 
-    /**
-     *
-     */
-    public static void paintBucket(int x, int y){
 
+    /** Go back one in canvas history and load it to canvas*/
+    public static void backInHistory(){
 
+        if(currentHistoryIndex == 0)
+            return;
+
+        currentHistoryIndex--;
+
+        loadHistory(currentHistoryIndex);
 
     }
+
+    /** Go forward one in canvas history and load it to canvas*/
+    public static void forwardInHistory(){
+
+        if(currentHistoryIndex == canvasHistory.size()-1)
+            return;
+
+        currentHistoryIndex++;
+
+        loadHistory(currentHistoryIndex);
+
+    }
+
+
+
+
 
 }

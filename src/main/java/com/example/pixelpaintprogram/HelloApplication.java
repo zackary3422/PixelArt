@@ -1,6 +1,6 @@
 package com.example.pixelpaintprogram;
 
-import com.example.pixelpaintprogram.Tools.Tool;
+import com.example.pixelpaintprogram.Tools.*;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -12,12 +12,12 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-
 import java.io.IOException;
-import java.util.Objects;
+
 
 public class HelloApplication extends Application {
 
+    //Sliders
     public static Slider redSlider;
     public static Slider blueSlider;
     public static Slider greenSlider;
@@ -26,6 +26,12 @@ public class HelloApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
 
+        //Tools
+        ColorPicker colorPicker = new ColorPicker();
+        Pencil pencil = new Pencil();
+        PaintBucket paintBucket = new PaintBucket();
+        Eraser eraser = new Eraser();
+
 
         //Tool Options Scene------------------------------------------------------------------------------------
 
@@ -33,15 +39,17 @@ public class HelloApplication extends Application {
         toolOptionsStage.setTitle("Tool Options");
 
         //Create Color Icon
-        Image colorSelectorIcon = new Image("file:C:\\Users\\zackd\\Downloads\\PixelPaintProgram\\src\\main\\resources\\Images\\ColorSelectorIcon.png");
-        ImageView colorSelectorView = new ImageView(colorSelectorIcon );
+        Image colorSelectorIcon = colorPicker.getImage();
+        ImageView colorSelectorView = new ImageView(colorSelectorIcon);
         colorSelectorView.setFitHeight(50);
         colorSelectorView.setFitWidth(50);
 
         Button colorSelectorButton = new Button();
-        colorSelectorButton.setGraphic( colorSelectorView );
+        colorSelectorButton.setGraphic(colorSelectorView);
 
-// Create sliders for RGB colors
+        // Create sliders for RGB colors
+
+        //Red slider
         redSlider = new Slider(0.0, 1.0, 0.0);
         redSlider.setShowTickLabels(true);
         redSlider.setShowTickMarks(true);
@@ -52,6 +60,8 @@ public class HelloApplication extends Application {
         Label sliderLabel = new Label("RED");
         sliderLabel.setLabelFor(redSlider);
 
+
+        //Green slider
         greenSlider = new Slider(0.0, 1.0, 0.0);
         greenSlider.setShowTickLabels(true);
         greenSlider.setShowTickMarks(true);
@@ -62,6 +72,7 @@ public class HelloApplication extends Application {
         Label sliderLabelGreen = new Label("GREEN");
         sliderLabelGreen.setLabelFor(greenSlider);
 
+        //Blue slider
         blueSlider = new Slider(0.0, 1.0, 0.0);
         blueSlider.setShowTickLabels(true);
         blueSlider.setShowTickMarks(true);
@@ -70,61 +81,95 @@ public class HelloApplication extends Application {
         blueSlider.setBlockIncrement(0.1);
 
         Label sliderLabelBlue = new Label("BLUE");
-        sliderLabelBlue.setLabelFor( blueSlider);
+        sliderLabelBlue.setLabelFor(blueSlider);
 
-         //Create Pencil icon
-        Image pencilIcon = new Image("file:C:\\Users\\zackd\\Downloads\\PixelPaintProgram\\src\\main\\resources\\Images\\PencilIcon.png");
+        //Create Pencil icon
+        Image pencilIcon = pencil.getImage();
         ImageView pencilView = new ImageView(pencilIcon);
         pencilView.setFitHeight(50);
         pencilView.setFitWidth(50);
 
+        //Create button
         Button pencilButton = new Button();
-        pencilButton.setGraphic(pencilView );
+        pencilButton.setGraphic(pencilView);
 
-        pencilButton.setOnAction(e -> {
-            Tool.currentTool = Tool.Tools.PENCIL;});
+        pencilButton.setOnAction(e -> {//Set event action
+            Pencil.selectPencil();
+        });
 
         //Create Pain Bucket Icon
-        Image paintIcon = new Image("file:C:\\Users\\zackd\\Downloads\\PixelPaintProgram\\src\\main\\resources\\Images\\PaintBucketIcon.png");
+        Image paintIcon = paintBucket.getImage();
         ImageView paintView = new ImageView(paintIcon);
         paintView.setFitHeight(50);
         paintView.setFitWidth(50);
 
+        //Create button
         Button paintButton = new Button();
-        paintButton.setGraphic(paintView );
+        paintButton.setGraphic(paintView);
 
-        paintButton.setOnAction(e -> {Tool.currentTool = Tool.Tools.PAINTBUCKET;});
+        paintButton.setOnAction(e -> {
+            PaintBucket.selectPaintBucket();
+        });//Set event action
 
-        //Create Pain Bucket Icon
-        Image eraserIcon = new Image("file:C:\\Users\\zackd\\Downloads\\PixelPaintProgram\\src\\main\\resources\\Images\\EraserIcon.png");
+        //Create Eraser Icon
+        Image eraserIcon = eraser.getImage();
         ImageView eraserView = new ImageView(eraserIcon);
         eraserView.setFitHeight(50);
         eraserView.setFitWidth(50);
 
+        //Create button
         Button eraserButton = new Button();
-        eraserButton.setGraphic(eraserView );
+        eraserButton.setGraphic(eraserView);
 
         eraserButton.setOnAction(e -> {
-            Tool.currentTool = Tool.Tools.ERASER;});
+            Eraser.selectEraser();
+        });//Set event action
+
+        //Add forwards and backwards button
+        Image reverseIcon = new Image("file:C:\\Users\\zackd\\Downloads\\PixelPaintProgram\\src\\main\\resources\\Images\\reversebutton.png");
+        ImageView reverseView = new ImageView(reverseIcon);
+        reverseView.setFitHeight(50);
+        reverseView.setFitWidth(50);
+
+        Button reverseButton = new Button();
+        reverseButton.setGraphic(reverseView);
+
+        reverseButton.setOnAction(e -> {
+            Canvas.backInHistory();
+        });
 
 
+        //Add forwards  button
+        Image forwardIcon = new Image("file:C:\\Users\\zackd\\Downloads\\PixelPaintProgram\\src\\main\\resources\\Images\\reversebutton1.png");
+        ImageView forwardView = new ImageView(forwardIcon);
+        forwardView.setFitHeight(50);
+        forwardView.setFitWidth(50);
+
+        Button forwardButton = new Button();
+        forwardButton.setGraphic(forwardView);
+
+        forwardButton.setOnAction(e -> {
+            Canvas.forwardInHistory();
+        });
+
+
+        //Add tools to pane with VBox
         VBox toolOptionsRoot = new VBox(10);
         toolOptionsRoot.getChildren().add(colorSelectorView);
-        toolOptionsRoot.getChildren().addAll(sliderLabel, redSlider,sliderLabelGreen, greenSlider, sliderLabelBlue, blueSlider);
+        toolOptionsRoot.getChildren().addAll(sliderLabel, redSlider, sliderLabelGreen, greenSlider, sliderLabelBlue, blueSlider);
         toolOptionsRoot.getChildren().add(pencilButton);
         toolOptionsRoot.getChildren().add(paintButton);
         toolOptionsRoot.getChildren().add(eraserButton);
-
+        toolOptionsRoot.getChildren().add(reverseButton);
+        toolOptionsRoot.getChildren().add(forwardButton);
 
         toolOptionsRoot.setPadding(new Insets(20));
-        Scene toolOptionsScene = new Scene(toolOptionsRoot, 300, 550);
+        Scene toolOptionsScene = new Scene(toolOptionsRoot, 300, 700);
 
         toolOptionsStage.setScene(toolOptionsScene);
         toolOptionsStage.show();
 
 
-
-        //---------------------------------------------------------------------------------
         //Canvas for pixels
         Canvas canvas = new Canvas(20, 20);
 
@@ -141,22 +186,4 @@ public class HelloApplication extends Application {
         launch();
     }
 
-
-    public void selectPencil(){
-        Tool.currentTool = Tool.Tools.PENCIL;
-
-
-    }
-
-    public void selectEraser(){
-        Tool.currentTool = Tool.Tools.ERASER;
-
-
-    }
-
-    public void selectPaintBucket(){
-        Tool.currentTool = Tool.Tools.PAINTBUCKET;
-
-
-    }
 }

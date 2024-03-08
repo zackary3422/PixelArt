@@ -1,5 +1,8 @@
 package com.example.pixelpaintprogram;
 
+import com.example.pixelpaintprogram.Tools.Eraser;
+import com.example.pixelpaintprogram.Tools.PaintBucket;
+import com.example.pixelpaintprogram.Tools.Pencil;
 import com.example.pixelpaintprogram.Tools.Tool;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -62,31 +65,22 @@ public class Pixel {
         rectangle.setFill(color);
     }
 
-
+    /**
+     * Call tool methods when
+     * */
     public void clicked(){
 
         if(Tool.currentTool == Tool.Tools.PENCIL)
-            pencil();
+            Pencil.changeColor(this);
         else if (Tool.currentTool == Tool.Tools.ERASER)
-            eraser();
-        else
-            Canvas.paintBucket(x, y);
+            Eraser.erase(this);
+        else{
+            PaintBucket.paintBucket(x, y);
+        }
     }
 
-    /** */
-    public void pencil(){
 
-        double red = HelloApplication.redSlider.getValue();
-        double blue = HelloApplication.blueSlider.getValue();
-        double green = HelloApplication.greenSlider.getValue();
 
-        changeColor(new Color(red, green, blue, 1.0));
-    }
-
-    /** */
-    public void eraser(){
-        changeColor(new Color(1, 1, 1, 1.0));
-    }
 
 
 

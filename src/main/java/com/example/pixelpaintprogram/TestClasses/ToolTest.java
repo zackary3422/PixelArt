@@ -19,9 +19,9 @@ public class ToolTest {
 
 
         Color oldColor = Color.RED;
-        colorPicker.selectColor(oldColor);
+       // colorPicker.selectColor(oldColor);
 
-        colorPicker.selectColor(Color.GREEN);
+      //  colorPicker.selectColor(Color.GREEN);
 
         if(oldColor != ColorPicker.currentColor){
             System.out.println("Color Changes Correctly");

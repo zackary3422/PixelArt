@@ -3,6 +3,7 @@ module com.example.pixelpaintprogram {
     requires javafx.fxml;
 
     requires org.kordamp.bootstrapfx.core;
+    requires java.desktop;
 
     opens com.example.pixelpaintprogram to javafx.fxml;
     exports com.example.pixelpaintprogram;
